@@ -29,12 +29,24 @@ initialize_sim_data <- function(params){
   
   with(params, {
     
-    trt_ACEI <- as.numeric(c(rep(1, sample_size/2), rep(0, sample_size/2)))
-    trt_thiazide <- 1-trt_ACEI
-    
+    if(separate_ZA_ZY) {
+      
+      trt_ZA <- as.numeric(c(rep(1, sample_size/2), rep(0, sample_size/2)))
+      trt_ZY <- as.numeric(c(rep(0, sample_size/2), rep(1, sample_size/2)))
+      trt_thiazide <- rep(NA_real_, sample_size)
+      
+    } else {
+      
+      trt_thiazide <- trt_ZA <- trt_ZY <- 
+        as.numeric(c(rep(1, sample_size/2), rep(0, sample_size/2)))
+      
+    }
+
     out <- data.frame(
       id = rep(1:sample_size, each = num_intervals),
       trt_thiazide = rep(trt_thiazide, each = num_intervals),
+      trt_ZA = rep(trt_ZA, each = num_intervals),
+      trt_ZY = rep(trt_ZY, each = num_intervals),
       interval = rep(1:num_intervals, times = sample_size),
       AKI = rep(0, times = sample_size*num_intervals),
       abnormal_BP = rep(0, times = sample_size*num_intervals),
@@ -103,20 +115,20 @@ create_sim_data <- function(params) {
         rbinom(n=sample_size, size=1,
                p = AKI_baseline + 
                  AKI_adherent*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)] -
-                 AKI_thiazide*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)]*sim_data$trt_thiazide[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)])
+                 AKI_thiazide*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)]*sim_data$trt_ZA[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)])
       
       sim_data$abnormal_BP[seq(int, int+(num_intervals*(sample_size-1)), by=num_intervals)] <- 
         rbinom(n=sample_size, size=1,
                p = abnormal_BP_baseline - 
                  abnormal_BP_adherent*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)] -
-                 abnormal_BP_thiazide*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)]*sim_data$trt_thiazide[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)])
+                 abnormal_BP_thiazide*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)]*sim_data$trt_ZY[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)])
       
       if (adherence_model == 1) {
         
         sim_data$adherent[seq(int, int+(num_intervals*(sample_size-1)), by=num_intervals)] <- 
           rbinom(n=sample_size, size=1,
                  p = adherence_baseline + 
-                   adherence_thiazidecost*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)]*sim_data$trt_thiazide[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)])
+                   adherence_thiazidecost*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)]*sim_data$trt_ZA[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)])
         
       }
       
@@ -125,7 +137,7 @@ create_sim_data <- function(params) {
         sim_data$adherent[seq(int, int+(num_intervals*(sample_size-1)), by=num_intervals)] <- 
           rbinom(n=sample_size, size=1,
                  p = adherence_baseline + 
-                   adherence_thiazidecost*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)]*sim_data$trt_thiazide[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)] - 
+                   adherence_thiazidecost*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)]*sim_data$trt_ZA[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)] - 
                    adherence_AKI*sim_data$AKI[seq(int, int+(num_intervals*(sample_size-1)), by=num_intervals)])
         
       }
@@ -135,7 +147,7 @@ create_sim_data <- function(params) {
         sim_data$adherent[seq(int, int+(num_intervals*(sample_size-1)), by=num_intervals)] <- 
         rbinom(n=sample_size, size=1,
                p = adherence_baseline + 
-                 adherence_thiazidecost*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)]*sim_data$trt_thiazide[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)] - 
+                 adherence_thiazidecost*sim_data$adherent[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)]*sim_data$trt_ZA[seq((int-1), (int-1)+(num_intervals*(sample_size-1)), by=num_intervals)] - 
                  adherence_AKI*sim_data$AKI[seq(int, int+(num_intervals*(sample_size-1)), by=num_intervals)] +
                  adherence_abnormal_BP*sim_data$abnormal_BP[seq(int, int+(num_intervals*(sample_size-1)), by=num_intervals)])
         
