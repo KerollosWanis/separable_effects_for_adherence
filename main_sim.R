@@ -37,10 +37,13 @@ sim_data <- list(
   
 save(sim_data, file='./sim_data.Rdata')
 
-######################################################
-## Compute weights for intervention on prior death ###
-## which is used for covariate balance comparisons ###
-######################################################
+#######################################################
+# Compute weights for intervention on prior death
+# which can be used for covariate balance comparisons 
+# However, we do not use these in the manuscript 
+# Instead we present covariate and adherence comparisons
+# conditional on past survival
+#######################################################
 
 for (d in 1:length(sim_data)) {
   
@@ -98,7 +101,7 @@ total_dead_3 <- sim_data[[3]] %>% group_by(interval, trt_thiazide) %>% summarise
 ######### Adherence balance for total effect  ########
 ######################################################
 
-total_adherence_1 <- sim_data[[1]] %>% group_by(interval, trt_thiazide) %>% summarise(adherence=mean(Wt_death*adherent)/mean(Wt_death)) %>% 
+total_adherence_1 <- sim_data[[1]] %>% group_by(interval, trt_thiazide) %>% summarise(adherence=mean(adherent)) %>% 
   ggplot(data=., aes(x=interval, y=adherence, col=as.factor(trt_thiazide), linetype=as.factor(trt_thiazide))) +
   geom_point(size=0.25) + geom_line(size=0.25) + xlim(c(1,24)) + ylim(c(0,1)) + theme_classic() +
   theme(legend.title=element_blank()) +
@@ -109,7 +112,7 @@ total_adherence_1 <- sim_data[[1]] %>% group_by(interval, trt_thiazide) %>% summ
 
 ####################################################################################################
 
-total_adherence_2 <- sim_data[[2]] %>% group_by(interval, trt_thiazide) %>% summarise(adherence=mean(Wt_death*adherent)/mean(Wt_death)) %>% 
+total_adherence_2 <- sim_data[[2]] %>% group_by(interval, trt_thiazide) %>% summarise(adherence=mean(adherent)) %>% 
   ggplot(data=., aes(x=interval, y=adherence, col=as.factor(trt_thiazide), linetype=as.factor(trt_thiazide))) +
   geom_point(size=0.25) + geom_line(size=0.25) + xlim(c(1,24)) + ylim(c(0,1)) + theme_classic() +
   theme(legend.title=element_blank()) +
@@ -120,7 +123,7 @@ total_adherence_2 <- sim_data[[2]] %>% group_by(interval, trt_thiazide) %>% summ
 
 ####################################################################################################
 
-total_adherence_3 <- sim_data[[3]] %>% group_by(interval, trt_thiazide) %>% summarise(adherence=mean(Wt_death*adherent)/mean(Wt_death)) %>% 
+total_adherence_3 <- sim_data[[3]] %>% group_by(interval, trt_thiazide) %>% summarise(adherence=mean(adherent)) %>% 
   ggplot(data=., aes(x=interval, y=adherence, col=as.factor(trt_thiazide), linetype=as.factor(trt_thiazide))) +
   geom_point(size=0.25) + geom_line(size=0.25) + xlim(c(1,24)) + ylim(c(0,1)) + theme_classic() +
   theme(legend.title=element_blank()) +
@@ -133,7 +136,7 @@ total_adherence_3 <- sim_data[[3]] %>% group_by(interval, trt_thiazide) %>% summ
 ######## Abnormal BP balance for total effect ########
 ######################################################
 
-total_abnormalBP_1 <- sim_data[[1]] %>% group_by(interval, trt_thiazide) %>% summarise(abnormalBP=mean(Wt_death*abnormal_BP)/mean(Wt_death)) %>% 
+total_abnormalBP_1 <- sim_data[[1]] %>% group_by(interval, trt_thiazide) %>% summarise(abnormalBP=mean(abnormal_BP)) %>% 
   group_by(trt_thiazide) %>%  
   ggplot(data=., aes(x=interval, y=abnormalBP, col=as.factor(trt_thiazide), linetype=as.factor(trt_thiazide))) +
   geom_point(size=0.25) + geom_line(size=0.25) + xlim(c(1,24)) + ylim(c(0,1)) + theme_classic() +
@@ -145,7 +148,7 @@ total_abnormalBP_1 <- sim_data[[1]] %>% group_by(interval, trt_thiazide) %>% sum
 
 ####################################################################################################
 
-total_abnormalBP_2 <- sim_data[[2]] %>% group_by(interval, trt_thiazide) %>% summarise(abnormalBP=mean(Wt_death*abnormal_BP)/mean(Wt_death)) %>% 
+total_abnormalBP_2 <- sim_data[[2]] %>% group_by(interval, trt_thiazide) %>% summarise(abnormalBP=mean(abnormal_BP)) %>% 
   group_by(trt_thiazide) %>%  
   ggplot(data=., aes(x=interval, y=abnormalBP, col=as.factor(trt_thiazide), linetype=as.factor(trt_thiazide))) +
   geom_point(size=0.25) + geom_line(size=0.25) + xlim(c(1,24)) + ylim(c(0,1)) + theme_classic() +
@@ -157,7 +160,7 @@ total_abnormalBP_2 <- sim_data[[2]] %>% group_by(interval, trt_thiazide) %>% sum
 
 ####################################################################################################
 
-total_abnormalBP_3 <- sim_data[[3]] %>% group_by(interval, trt_thiazide) %>% summarise(abnormalBP=mean(Wt_death*abnormal_BP)/mean(Wt_death)) %>% 
+total_abnormalBP_3 <- sim_data[[3]] %>% group_by(interval, trt_thiazide) %>% summarise(abnormalBP=mean(abnormal_BP)) %>% 
   group_by(trt_thiazide) %>%  
   ggplot(data=., aes(x=interval, y=abnormalBP, col=as.factor(trt_thiazide), linetype=as.factor(trt_thiazide))) +
   geom_point(size=0.25) + geom_line(size=0.25) + xlim(c(1,24)) + ylim(c(0,1)) + theme_classic() +
@@ -171,7 +174,7 @@ total_abnormalBP_3 <- sim_data[[3]] %>% group_by(interval, trt_thiazide) %>% sum
 ############ AKI balance for total effect ############
 ######################################################
 
-total_AKI_1 <- sim_data[[1]] %>% group_by(interval, trt_thiazide) %>% summarise(AKI=mean(Wt_death*AKI)/mean(Wt_death)) %>% 
+total_AKI_1 <- sim_data[[1]] %>% group_by(interval, trt_thiazide) %>% summarise(AKI=mean(AKI)) %>% 
   group_by(trt_thiazide) %>%  
   ggplot(data=., aes(x=interval, y=AKI, col=as.factor(trt_thiazide), linetype=as.factor(trt_thiazide))) +
   geom_point(size=0.25) + geom_line(size=0.25) + xlim(c(1,24)) + ylim(c(0,0.1)) + theme_classic() +
@@ -183,7 +186,7 @@ total_AKI_1 <- sim_data[[1]] %>% group_by(interval, trt_thiazide) %>% summarise(
 
 ####################################################################################################
 
-total_AKI_2 <- sim_data[[2]] %>% group_by(interval, trt_thiazide) %>% summarise(AKI=mean(Wt_death*AKI)/mean(Wt_death)) %>% 
+total_AKI_2 <- sim_data[[2]] %>% group_by(interval, trt_thiazide) %>% summarise(AKI=mean(AKI)) %>% 
   group_by(trt_thiazide) %>%  
   ggplot(data=., aes(x=interval, y=AKI, col=as.factor(trt_thiazide), linetype=as.factor(trt_thiazide))) +
   geom_point(size=0.25) + geom_line(size=0.25) + xlim(c(1,24)) + ylim(c(0,0.1)) + theme_classic() +
@@ -195,7 +198,7 @@ total_AKI_2 <- sim_data[[2]] %>% group_by(interval, trt_thiazide) %>% summarise(
 
 ####################################################################################################
 
-total_AKI_3 <- sim_data[[3]] %>% group_by(interval, trt_thiazide) %>% summarise(AKI=mean(Wt_death*AKI)/mean(Wt_death)) %>% 
+total_AKI_3 <- sim_data[[3]] %>% group_by(interval, trt_thiazide) %>% summarise(AKI=mean(AKI)) %>% 
   group_by(trt_thiazide) %>%  
   ggplot(data=., aes(x=interval, y=AKI, col=as.factor(trt_thiazide), linetype=as.factor(trt_thiazide))) +
   geom_point(size=0.25) + geom_line(size=0.25) + xlim(c(1,24)) + ylim(c(0,0.1)) + theme_classic() +
@@ -417,11 +420,11 @@ separable_dead_3_check <- bind_rows(
 
 separable_adherence_1 <- bind_rows(
   data.frame(
-    sim_data[[4]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(adherence=mean(Wt_death*adherent)/mean(Wt_death)),
+    sim_data[[4]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(adherence=mean(adherent)),
     trt_thiazide = 0
   ),
   data.frame(
-    sim_data[[1]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(adherence=mean(Wt_death*adherent)/mean(Wt_death)),
+    sim_data[[1]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(adherence=mean(adherent)),
     trt_thiazide = 1
   )
 ) %>% 
@@ -437,11 +440,11 @@ separable_adherence_1 <- bind_rows(
 
 separable_adherence_2 <- bind_rows(
   data.frame(
-    sim_data[[5]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(adherence=mean(Wt_death*adherent)/mean(Wt_death)),
+    sim_data[[5]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(adherence=mean(adherent)),
     trt_thiazide = 0
   ),
   data.frame(
-    sim_data[[2]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(adherence=mean(Wt_death*adherent)/mean(Wt_death)),
+    sim_data[[2]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(adherence=mean(adherent)),
     trt_thiazide = 1
   )
 ) %>% 
@@ -457,11 +460,11 @@ separable_adherence_2 <- bind_rows(
 
 separable_adherence_3 <- bind_rows(
   data.frame(
-    sim_data[[6]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(adherence=mean(Wt_death*adherent)/mean(Wt_death)),
+    sim_data[[6]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(adherence=mean(adherent)),
     trt_thiazide = 0
   ),
   data.frame(
-    sim_data[[3]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(adherence=mean(Wt_death*adherent)/mean(Wt_death)),
+    sim_data[[3]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(adherence=mean(adherent)),
     trt_thiazide = 1
   )
 ) %>% 
@@ -479,11 +482,11 @@ separable_adherence_3 <- bind_rows(
 
 separable_abnormalBP_1 <- bind_rows(
   data.frame(
-    sim_data[[4]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(abnormalBP=mean(Wt_death*abnormal_BP)/mean(Wt_death)),
+    sim_data[[4]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(abnormalBP=mean(abnormal_BP)),
     trt_thiazide = 0
   ),
   data.frame(
-    sim_data[[1]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(abnormalBP=mean(Wt_death*abnormal_BP)/mean(Wt_death)),
+    sim_data[[1]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(abnormalBP=mean(abnormal_BP)),
     trt_thiazide = 1
   )
 ) %>% 
@@ -499,11 +502,11 @@ separable_abnormalBP_1 <- bind_rows(
 
 separable_abnormalBP_2 <- bind_rows(
   data.frame(
-    sim_data[[5]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(abnormalBP=mean(Wt_death*abnormal_BP)/mean(Wt_death)),
+    sim_data[[5]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(abnormalBP=mean(abnormal_BP)),
     trt_thiazide = 0
   ),
   data.frame(
-    sim_data[[2]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(abnormalBP=mean(Wt_death*abnormal_BP)/mean(Wt_death)),
+    sim_data[[2]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(abnormalBP=mean(abnormal_BP)),
     trt_thiazide = 1
   )
 ) %>% 
@@ -519,11 +522,11 @@ separable_abnormalBP_2 <- bind_rows(
 
 separable_abnormalBP_3 <- bind_rows(
   data.frame(
-    sim_data[[6]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(abnormalBP=mean(Wt_death*abnormal_BP)/mean(Wt_death)),
+    sim_data[[6]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(abnormalBP=mean(abnormal_BP)),
     trt_thiazide = 0
   ),
   data.frame(
-    sim_data[[3]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(abnormalBP=mean(Wt_death*abnormal_BP)/mean(Wt_death)),
+    sim_data[[3]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(abnormalBP=mean(abnormal_BP)),
     trt_thiazide = 1
   )
 ) %>% 
@@ -541,11 +544,11 @@ separable_abnormalBP_3 <- bind_rows(
 
 separable_AKI_1 <- bind_rows(
   data.frame(
-    sim_data[[4]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(AKI=mean(Wt_death*AKI)/mean(Wt_death)),
+    sim_data[[4]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(AKI=mean(AKI)),
     trt_thiazide = 0
   ),
   data.frame(
-    sim_data[[1]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(AKI=mean(Wt_death*AKI)/mean(Wt_death)),
+    sim_data[[1]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(AKI=mean(AKI)),
     trt_thiazide = 1
   )
 ) %>% 
@@ -561,11 +564,11 @@ separable_AKI_1 <- bind_rows(
 
 separable_AKI_2 <- bind_rows(
   data.frame(
-    sim_data[[5]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(AKI=mean(Wt_death*AKI)/mean(Wt_death)),
+    sim_data[[5]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(AKI=mean(AKI)),
     trt_thiazide = 0
   ),
   data.frame(
-    sim_data[[2]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(AKI=mean(Wt_death*AKI)/mean(Wt_death)),
+    sim_data[[2]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(AKI=mean(AKI)),
     trt_thiazide = 1
   )
 ) %>% 
@@ -581,11 +584,11 @@ separable_AKI_2 <- bind_rows(
 
 separable_AKI_3 <- bind_rows(
   data.frame(
-    sim_data[[6]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(AKI=mean(Wt_death*AKI)/mean(Wt_death)),
+    sim_data[[6]] %>% filter(trt_ZA==1 & trt_ZY==0) %>% group_by(interval) %>% summarise(AKI=mean(AKI)),
     trt_thiazide = 0
   ),
   data.frame(
-    sim_data[[3]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(AKI=mean(Wt_death*AKI)/mean(Wt_death)),
+    sim_data[[3]] %>% filter(trt_thiazide==1) %>% group_by(interval) %>% summarise(AKI=mean(AKI)),
     trt_thiazide = 1
   )
 ) %>% 
